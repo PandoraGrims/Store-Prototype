@@ -5,7 +5,9 @@ from webapp.views import ProductListView, ProductCreateView, ProductDeleteView, 
 
 app_name = "webapp"
 
+
 urlpatterns = [
+
     path('', ProductListView.as_view(), name="index"),
     path('products/add/', ProductCreateView.as_view(), name="product_add"),
     path('product/<int:pk>/', ProductDetailView.as_view(), name="product_view"),

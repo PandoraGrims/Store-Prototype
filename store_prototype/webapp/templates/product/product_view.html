@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block link %}
+    <li class="nav-item">
+        <a href="{% url "webapp:product_update" product.pk %}" class="nav-link">Редактирование</a>
+    </li>
+    <li class="nav-item">
+        <a href="{% url "webapp:product_delete" product.pk %}" class="nav-link">Удаление</a>
+    </li>
+{% endblock %}
+
+{% block content %}
+    <div class="card-body">
+        <h5 class="card-title">{{ product.title }}</h5>
+        <h6 class="card-subtitle mb-2 text-body-secondary">{{ product.price }} ({{ product.amount }})</h6>
+        <p class="card-text">{{ product.description }}</p>
+        <p class="card-text">Категория {{ product.category.title }}</p>
+        {% include "partial/cart_add_form.html" %}
+    </div>
+
+{% endblock %}
