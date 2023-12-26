@@ -1,4 +1,4 @@
-# todo
+# store-prototype
 
 ## Зависимости
 
