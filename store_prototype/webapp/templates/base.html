@@ -21,7 +21,7 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
+            <ul class="navbar-nav ml-auto">
 
                 {% block link %}
                 {% endblock %}
@@ -31,33 +31,24 @@
                 </li>
 
                 {% if request.user.is_authenticated %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url "accounts:logout" %}">Выход</a>
-                </li>
-                <li class="nav-item">
-                    <p>Здравствуйте <a
-                            href="{% url "accounts:profile" request.user.pk %}">{{ request.user.username }} </a></p>
-                </li>
+                    <li class="nav-item">
+                        <a class="nav-link" style="color: blueviolet" href="{% url "accounts:logout" %}">Выход</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" style="color: blueviolet"
+                           href="{% url "accounts:profile" request.user.pk %}">Вы вошли
+                            как {{ request.user.username }} </a>
+                    </li>
                 {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url "accounts:register" %}?next={{ request.path }}">Регистрация</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url "accounts:login" %}?next={{ request.path }}">Вход</a>
-                </li>
-            {% endif %}
-                {#                {% if request.user.is_authenticated %}#}
-                {#                    <li class="nav-item">#}
-                {#                        <a class="nav-link" href="{% url "accounts:logout" %}">Выход</a>#}
-                {#                    </li>#}
-                {#                {% else %}#}
-                {#                    <li class="nav-item">#}
-                {#                        <a class="nav-link" href="#">Регистрация</a>#}
-                {#                    </li>#}
-                {#                    <li class="nav-item">#}
-                {#                        <a class="nav-link" href="{% url "accounts:login" %}">Вход</a>#}
-                {#                    </li>#}
-                {#                {% endif %}#}
+                    <li class="nav-item">
+                        <a class="nav-link" style="color: red"
+                           href="{% url "accounts:register" %}?next={{ request.path }}">Регистрация</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" style="color: red" href="{% url "accounts:login" %}?next={{ request.path }}">Вход</a>
+                    </li>
+                {% endif %}
+
             </ul>
         </div>
     </div>

@@ -10,11 +10,11 @@
 {% endblock %}
 
 {% block content %}
-    <div class="card-body">
-        <h5 class="card-title">{{ product.title }}</h5>
-        <h6 class="card-subtitle mb-2 text-body-secondary">{{ product.price }} ({{ product.amount }})</h6>
-        <p class="card-text">{{ product.description }}</p>
-        <p class="card-text">Категория {{ product.category.title }}</p>
+    <div class="card-body" style="text-align: center">
+        <h5 class="card-title my-2" style="font-size: 32px">{{ product.title }}</h5>
+        <h6 class="card-subtitle mb-2 text-body-secondary" style="font-size: 22px">Цена: {{ product.price }} В наличии:{{ product.amount }}</h6>
+        <p class="card-text" style="font-size: 22px">Описание: {{ product.description }}</p>
+        <p class="card-text" style="font-size: 18px">Категория: {{ product.category.title }}</p>
         {% include "partial/cart_add_form.html" %}
     </div>
 

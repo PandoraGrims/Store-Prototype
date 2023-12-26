@@ -13,9 +13,7 @@ class ProductListView(ListView):
     model = Product
     template_name = "product/index.html"
     context_object_name = "products"
-    paginate_by = 3
-
-    # paginate_orphans = 1
+    paginate_by = 6
 
     def dispatch(self, request, *args, **kwargs):
         self.form = self.get_search_form()
@@ -42,6 +40,7 @@ class ProductListView(ListView):
         queryset = super().get_queryset()
         if self.search_value:
             queryset = queryset.filter(title__icontains=self.search_value)
+        queryset = queryset.filter(amount__gt=0)  # Отсекаем товары с отрицательным остатком
         queryset = queryset.order_by("category__title", "title")
         return queryset
 
@@ -49,12 +48,6 @@ class ProductListView(ListView):
 class ProductCreateView(CreateView):
     form_class = ProductForm
     template_name = "product/product_create.html"
-
-    # def render_to_response(self, context, **response_kwargs):
-    #     response = super().render_to_response(context, **response_kwargs)
-    #     if context["form"].errors:
-    #         response.status_code = HTTPStatus.BAD_REQUEST
-    #     return response
 
     def form_invalid(self, form):
         return super().form_invalid(form)

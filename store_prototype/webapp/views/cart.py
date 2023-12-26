@@ -1,6 +1,7 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views import View
 from django.views.generic import CreateView, ListView, DeleteView, TemplateView
@@ -10,8 +11,8 @@ from webapp.models import Cart, Product, Order, OrderProduct
 
 
 class CartAddView(PermissionRequiredMixin, View):
-    # model = Cart
-    # form_class = CartForm
+    model = Cart
+    form_class = CartForm
     permission_required = "webapp.add_product"
 
     def form_invalid(self, form):
@@ -23,8 +24,6 @@ class CartAddView(PermissionRequiredMixin, View):
         qty = int(request.POST.get("qty"))
 
         cart = self.request.session.get("cart", {})
-        # {"id": "qty"}
-        # {"1": 2, "4": 15}
         if str(product.pk) in cart:
             full_qty = qty + cart[str(product.pk)]
         else:
@@ -52,7 +51,6 @@ class CartView(TemplateView):
     template_name = "cart/cart_view.html"
 
     def get_context_data(self, *, object_list=None, **kwargs):
-
         cart = self.request.session.get("cart", {})
         print(cart)
 
@@ -79,26 +77,21 @@ class CartDeleteView(DeleteView):
     model = Cart
     success_url = reverse_lazy('webapp:cart')
 
-    def get(self, request, *args, **kwargs):
-        return self.delete(request, *args, **kwargs)
-
 
 class CartDeleteOneView(DeleteView):
     model = Cart
     success_url = reverse_lazy('webapp:cart')
 
-    def post(self, request, *args, **kwargs):
-        return self.delete(request, *args, **kwargs)
-
     def delete(self, request, *args, **kwargs):
-        self.object = self.get_object()
+        cart_item = get_object_or_404(Cart, pk=kwargs['pk'])
         success_url = self.get_success_url()
 
-        self.object.qty -= 1
-        if self.object.qty < 1:
-            self.object.delete()
+        if cart_item.qty > 1:
+            cart_item.qty -= 1
+            cart_item.save()
         else:
-            self.object.save()
+            cart_item.delete()
+
         return HttpResponseRedirect(success_url)
 
 
@@ -106,18 +99,6 @@ class OrderCreate(CreateView):
     model = Order
     form_class = OrderForm
     success_url = reverse_lazy("webapp:index")
-
-    # def form_valid(self, form):
-    #     order = form.save()
-    #     print(order)
-    #
-    #     for item in Cart.objects.all():
-    #         OrderProduct.objects.create(order=order, product=item.product, qty=item.qty)
-    #         item.product.amount -= item.qty
-    #         item.product.save()
-    #         item.delete()
-    #
-    #     return HttpResponseRedirect(self.success_url)
 
     def get_form_kwargs(self):
 
@@ -134,7 +115,6 @@ class OrderCreate(CreateView):
             form.instance.user = self.request.user
         order = form.save()
 
-
         products = []
         order_products = []
         cart = self.request.session.get("cart", {})
@@ -149,3 +129,9 @@ class OrderCreate(CreateView):
         Product.objects.bulk_update(products, ('amount',))
         self.request.session.pop("cart")
         return HttpResponseRedirect(self.success_url)
+
+
+@login_required
+def user_orders(request):
+    orders = Order.objects.filter(user=request.user)
+    return render(request, 'user_orders.html', {'orders': orders})

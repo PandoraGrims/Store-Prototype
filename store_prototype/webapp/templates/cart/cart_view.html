@@ -21,15 +21,15 @@
                 <td>{{ item.qty }}</td>
                 <td>{{ item.product_total }}</td>
                 <td><a href="{% url "webapp:delete_from_cart" item.product.pk %}">Удалить полностью</a></td>
-
                 <td>
-                    <form action="{% url "webapp:delete_from_cart_one" item.product.pk %}" method="post">
+                    <form action="{% url 'webapp:delete_from_cart_one' item.product.pk %}" method="post">
                         {% csrf_token %}
-                        <button>Удалить один</button>
+                        <button type="submit">Удалить один</button>
                     </form>
                 </td>
             </tr>
         {% endfor %}
+
         </tbody>
     </table>
 

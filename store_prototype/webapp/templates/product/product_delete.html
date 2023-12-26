@@ -1,10 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h3>вы уверены что хотите удалить продукт {{ product.title }}?</h3>
+    <h3 class="my-3">Вы точно уверены что хотите удалить продукт {{ product.title }}?</h3>
+    <h3>Подтвердите действие.</h3>
     <form action="" method="post">
         {% csrf_token %}
-        <button>Да</button>
+        <button class="btn btn-danger px-5 my-2">Да</button>
     </form>
-    <a href="{% url "webapp:index" %}">Нет</a>
+    <a href="{% url "webapp:index" %}" class="btn btn-success px-5">Нет</a>
 {% endblock %}
